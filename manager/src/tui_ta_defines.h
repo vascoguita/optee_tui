@@ -8,6 +8,6 @@
 #define NO                      "n"
 
 #define ST_OBJ_ID               "ST"
-#define ST_SETUP_HS             "Perform Pseudo UI handshake with secure world? [y\\n] "
+#define ST_SETUP_HS             "Setup Trusted UI? [y\\n] "
 
 #endif

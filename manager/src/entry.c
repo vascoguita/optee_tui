@@ -76,6 +76,7 @@ static TEE_Result setup(void *sess_ctx, uint32_t param_types, TEE_Param params[4
     ST.port = params[1].value.a;
     IMSG("Security Token Port Received: %d", ST.port);
 
+    //FIXME
     //flags = TEE_DATA_FLAG_ACCESS_READ;
     flags = TEE_DATA_FLAG_ACCESS_READ |		/* we can later read the oject */
             TEE_DATA_FLAG_ACCESS_WRITE |		/* we can later write into the object */

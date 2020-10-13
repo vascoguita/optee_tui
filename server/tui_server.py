@@ -1,8 +1,6 @@
 import configparser
 import socket
 import sys
-from tinyec import registry
-import secrets
 
 config = configparser.ConfigParser()
 config.read('config.ini')
@@ -29,7 +27,7 @@ while True:
     try:
         s.listen(1)
         conn, clientIP = s.accept()
-        print('Connected by', clientIP)
+        #print('Connected by', clientIP)
     except OSError as msg:
         s.close()
         sys.exit(1)
