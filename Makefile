@@ -1,6 +1,7 @@
 ROOT							?= $(CURDIR)
 API_ROOT						?= $(ROOT)/api
 MANAGER_ROOT					?= $(ROOT)/manager
+SETUP_ROOT						?= $(ROOT)/setup
 
 .PHONY: all
 all: api
@@ -19,6 +20,13 @@ manager:
 		PLATFORM=$(PLATFORM) \
 		TA_DEV_KIT_DIR=$(TA_DEV_KIT_DIR)
 
+.PHONY: setup
+setup:
+	$(MAKE) -C $(SETUP_ROOT) \
+		CROSS_COMPILE=$(CROSS_COMPILE) \
+		TEEC_EXPORT=$(TEEC_EXPORT) \
+		--no-builtin-variables
+
 .PHONY: install
 install:
 	mv $(API_ROOT)/tui.a $(TA_DEV_KIT_DIR)/lib/. && \
@@ -27,6 +35,10 @@ install:
 
 .PHONY: clean
 clean: api_clean manager_clean
+
+.PHONY: setup_clean
+setup_clean:
+	$(MAKE) -C $(SETUP_ROOT) clean
 
 .PHONY: api_clean
 api_clean:
