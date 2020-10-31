@@ -76,12 +76,12 @@ static TEE_Result setup(void *sess_ctx, uint32_t param_types, TEE_Param params[4
     ST.port = params[1].value.a;
     IMSG("Security Token Port Received: %d", ST.port);
 
-    //FIXME
-    //flags = TEE_DATA_FLAG_ACCESS_READ;
-    flags = TEE_DATA_FLAG_ACCESS_READ |		/* we can later read the oject */
-            TEE_DATA_FLAG_ACCESS_WRITE |		/* we can later write into the object */
-            TEE_DATA_FLAG_ACCESS_WRITE_META |	/* we can later destroy or rename the object */
-            TEE_DATA_FLAG_OVERWRITE;		/* destroy existing object of same ID */
+
+    flags = TEE_DATA_FLAG_ACCESS_READ;
+    //flags = TEE_DATA_FLAG_ACCESS_READ |		/* we can later read the oject */
+    //        TEE_DATA_FLAG_ACCESS_WRITE |		/* we can later write into the object */
+    //        TEE_DATA_FLAG_ACCESS_WRITE_META |	/* we can later destroy or rename the object */
+    //        TEE_DATA_FLAG_OVERWRITE;		    /* destroy existing object of same ID */
 
     res = TEE_CreatePersistentObject(TEE_STORAGE_PRIVATE, ST_OBJ_ID, strlen(ST_OBJ_ID), flags, TEE_HANDLE_NULL, &ST, sizeof(struct _st), &obj);
     if (res != TEE_SUCCESS) {
