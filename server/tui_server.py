@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 import configparser
 import socket
 import sys
@@ -40,5 +41,7 @@ while True:
         print(print_str)
     elif code == 'I':
         conn.send(input(print_str).encode())
+    elif code == 'S':
+        conn.send("y".encode())
 
     conn.close()

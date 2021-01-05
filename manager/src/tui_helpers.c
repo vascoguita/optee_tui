@@ -137,3 +137,58 @@ TEE_Result input_aux(const char *str, char *input, size_t input_size){
 
     return res;
 }
+
+TEE_Result setup_aux(void){
+    uint32_t protocolError, count;
+    TEE_tcpSocket_Setup setup;
+    TEE_Result res;
+    TEE_iSocketHandle ctx;
+    char buffer_send[BUFFER_SIZE] = { };
+    char buffer_recv[BUFFER_SIZE] = { };
+
+    res = get_st_tcpSocket_Setup(&setup);
+    if(res != TEE_SUCCESS) {
+        EMSG("Failed to get Security Token setup, res=0x%08x", res);
+        return res;
+    }
+
+    res = TEE_tcpSocket->open(&ctx, &setup, &protocolError);
+    if(res != TEE_SUCCESS) {
+        EMSG("Failed to open TCP socket, ip=\"%s\", port=%d, res=0x%08x, protocolError=0x%x", setup.server_addr, setup.server_port, res, protocolError);
+        return res;
+    }
+
+    strncpy(buffer_send, OP_SETUP, 2*sizeof(char));
+    count = BUFFER_SIZE;
+    IMSG("Sending to %s:%d:\"%s\"", setup.server_addr, setup.server_port, buffer_send);
+    res = TEE_tcpSocket->send(ctx, buffer_send, &count, TEE_TIMEOUT_INFINITE);
+    if(res != TEE_SUCCESS || count != BUFFER_SIZE) {
+        EMSG("TCP socket failed to send data, res=0x%08x, transmitted=%lu (bytes)" , res, (unsigned long)count);
+        if(TEE_tcpSocket->close(ctx) != TEE_SUCCESS) {
+            EMSG("Failed to close TCP socket");
+        }
+        return res;
+    }
+
+    res = TEE_tcpSocket->recv(ctx, buffer_recv, &count, TEE_TIMEOUT_INFINITE);
+    if (res != TEE_SUCCESS){
+        EMSG("TCP socket failed to receive reply data, res=0x%08x, transmitted=%lu (bytes)" , res, (unsigned long)count);
+        if(TEE_tcpSocket->close(ctx) != TEE_SUCCESS) {
+            EMSG("Failed to close TCP socket");
+        }
+        return res;
+    }
+    IMSG("Received from %s:%d:\"%s\"", setup.server_addr, setup.server_port, buffer_recv);
+
+    res = TEE_tcpSocket->close(ctx);
+    if(res != TEE_SUCCESS) {
+        EMSG("Failed to close TCP socket, res=0x%08x", res);
+        return res;
+    }
+    if(strcmp(buffer_recv, YES) != 0)
+    {
+        return TEE_ERROR_GENERIC;
+    }
+
+    return res;
+}

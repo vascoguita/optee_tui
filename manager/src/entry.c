@@ -47,7 +47,6 @@ static TEE_Result setup(void *sess_ctx, uint32_t param_types, TEE_Param params[4
     TEE_Result res;
     char *ip;
     size_t ip_size;
-    char input[2];
 
     (void)&sess_ctx;
 
@@ -92,8 +91,8 @@ static TEE_Result setup(void *sess_ctx, uint32_t param_types, TEE_Param params[4
 
     IMSG("Security Token UI setup stored in persistent object \"%s\"", ST_OBJ_ID);
 
-    res = input_aux(ST_SETUP_HS, input, 2);
-    if(res != TEE_SUCCESS || strcmp(input, YES) != 0) {
+    res = setup_aux();
+    if(res != TEE_SUCCESS) {
         EMSG("Security Token setup failed to perform handshake 0x%08x", res);
         IMSG("Deleting Security Token UI setup persistent object \"%s\"", ST_OBJ_ID);
         if(TEE_OpenPersistentObject(TEE_STORAGE_PRIVATE, ST_OBJ_ID, strlen(ST_OBJ_ID), flags, &obj) != TEE_SUCCESS) {

@@ -7,5 +7,6 @@
 TEE_Result get_st_tcpSocket_Setup(TEE_tcpSocket_Setup *setup);
 TEE_Result print_aux(const char *str);
 TEE_Result input_aux(const char *str, char *input, size_t input_size);
+TEE_Result setup_aux(void);
 
 #endif
